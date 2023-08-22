@@ -10,7 +10,6 @@ import 'package:eventcount/pages/detailPage.dart';
 import 'package:eventcount/servis/eventService.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = false;
   List<String> timeList = [];
   List<DateTime> dateList=[];
-  double background =0;
+
 
   List eventList=[];
   Widget _title() {
@@ -41,16 +40,23 @@ class _HomePageState extends State<HomePage> {
         isScrollControlled: true,
         context: context,
         builder: (BuildContext context) {
-          return const AddPage();
+          return AddPage();
         });
   }
+
+
 
   void releasedEvent() {
     eventList = [];
     List event = _eventServis.getDataAll(TextData.eventName);
     setState(() {
       eventList = event;
+   
     });
+
+    for(var item in eventList){
+      print(item.id);
+    }
   }
 
   Widget _eventContainer(
@@ -156,7 +162,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16.0, top: 4.0),
                     child: Column(
@@ -165,14 +171,14 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(sayacSaniye.toInt()<10? "0":"",style: TextStyle(color: Colors.black,fontSize: 48, fontWeight: FontWeight.bold)),
+                            Text(sayacSaat.toInt()<10? "0":"",style: TextStyle(color: Colors.black,fontSize: 48, fontWeight: FontWeight.bold)),
                             Container(
                               
                               child: Text(sayacSaat.toInt().toString(),style: TextStyle(color: Colors.black,fontSize: 48, fontWeight: FontWeight.bold),),
                             ),
                           
                             Text(":"),
-                            Text(sayacSaniye.toInt()<10? "0":"",style: TextStyle(color: Colors.black,fontSize: 48, fontWeight: FontWeight.bold)),
+                            Text(sayacdakika.toInt()<10? "0":"",style: TextStyle(color: Colors.black,fontSize: 48, fontWeight: FontWeight.bold)),
                             Container(
                               child: Text(sayacdakika.toInt().toString(),style: TextStyle(color: Colors.black,fontSize: 48, fontWeight: FontWeight.bold)),
                             ),
@@ -192,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )),
               Expanded(
-                flex: 9,
+                flex: 8,
                 child: ListView.builder(
                     itemCount: eventList.length,
                     itemBuilder: (context, index) {
@@ -218,7 +224,7 @@ class _HomePageState extends State<HomePage> {
                                               .dateFormatGAY(data.date[0]),
                                           FontWeight.normal,
                                           12),
-                                      Text("${timeFormatNow.EventTime(data.date[0])}. Gun Etkinlik Suruyor")
+                                      Text("${timeFormatNow.EventTime(data.date[0])}"+"${TextData.etkin}")
                                     ],
                                   ),
                                   _eventContainer(Colors.black, data.name,
@@ -247,7 +253,7 @@ class _HomePageState extends State<HomePage> {
                                             onPressed: isLoading == true
                                                 ? () {
                                                     _toatsMessage(
-                                                        "Timer is Running");
+                                                      TextData.runnig  );
                                                   }
                                                 : () {
                                                     List<String> timeList = [];
@@ -301,8 +307,7 @@ class _HomePageState extends State<HomePage> {
                                                       isLoading,
                                                       timeList));
                       
-                                              print(data.time);
-                                              print(data.date);
+                                
                                             },
                                             icon: Icon(
                                               Icons.pause_circle,

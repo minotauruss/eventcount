@@ -1,6 +1,8 @@
 import 'package:eventcount/constant/textData.dart';
+import 'package:eventcount/constant/textStyle.dart';
 import 'package:eventcount/constant/timeFormatNow.dart';
 import 'package:eventcount/model/event.dart';
+import 'package:eventcount/pages/HomePage.dart';
 import 'package:eventcount/servis/eventService.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class AddPage extends StatefulWidget {
-  const AddPage({super.key});
+
+  AddPage({ super.key});
 
   @override
   State<AddPage> createState() => _AddPageState();
@@ -23,10 +26,18 @@ final TimeFormatNow timeFormatNow = TimeFormatNow();
 
 
   Widget _textEdit(TextEditingController controller,String title, ){
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        label: Text(title)
+    return Container(
+      padding:const EdgeInsets.all(12.0),
+      margin: const EdgeInsets.all(8.0),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+
+          fillColor: Colors.white60,
+          labelStyle: TextStyleEdit.textStyleBold24(Theme.of(context).primaryColor ,FontWeight.normal, 12),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          label: Text(title)
+        ),
       ),
     );
   }
@@ -37,26 +48,44 @@ void _handleService(String tableName,String id, Event model){
 _eventServis.saveData(tableName, id, model);
 }
   void _save(){
-    final DateTime dateTime = DateTime.now();
+  if(_controllerName.text!=""){
+      final DateTime dateTime = DateTime.now();
     String id = _uuid.v1();
     String name = _controllerName.text;
     String category = _controllerCategory.text;
     Event model = Event(id,name, category,[dateTime], false, ["0"]);
     _handleService(TextData.eventName, id, model);
+
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+    
   }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+       padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         height: MediaQuery.of(context).size.height*0.5,
         width: MediaQuery.of(context).size.width,
         child:  Column(
           children: <Widget>[
-            _textEdit(_controllerName, "Event Name"),
+            Expanded(
+              child: Column(
+              children: [
+                SizedBox(height: 24,),
+                  _textEdit(_controllerName, "Event Name"),
             _textEdit(_controllerCategory,"Category Name"),
-           ElevatedButton(onPressed: _save, child: const Text("Kaydet"))
+              ],
+            )),
+          
+        
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(onPressed: _save, child: Text("kaydet",style: TextStyle(color: Colors.white),), style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),))
     
           ],
         ),
